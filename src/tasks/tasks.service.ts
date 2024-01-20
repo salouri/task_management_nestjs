@@ -5,7 +5,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 
 @Injectable()
 export class TasksService {
-  private tasks: Task[] = [];
+  private tasks: Task[] = []; // in-memory database! temporary
 
   getAllTasks(): Task[] {
     return this.tasks;
