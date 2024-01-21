@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  tasks-postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nestdb2
+    networks:
+      - postgresnetw
+  pgadmin:
+    image: 'dpage/pgadmin4'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: salouri@example.org
+      PGADMIN_DEFAULT_PASSWORD: taskspass
+    ports:
+      - '82:80'
+    networks:
+      - postgresnetw
+networks:
+  postgresnetw:
+    driver: bridge

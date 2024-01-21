@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "db:dev:rm": "docker compose rm  -s -f -v tasks-postgres pgadmin",
+    "db:dev:up": "docker compose up -d tasks-postgres pgadmin",
+    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
