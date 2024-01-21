@@ -1,8 +1,8 @@
-export interface Task {
+export class Task {
   id: string;
   title: string;
   description: string;
-  status: TaskStatus;
+  status: TaskStatus; // the enum from below
 }
 
 export enum TaskStatus {
