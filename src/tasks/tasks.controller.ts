@@ -23,11 +23,9 @@ export class TasksController {
   }
 
   @Get()
-  getTasks(@Query() filterDto: FilterTasksDto): Task[] {
+  getTasks(@Query() data: FilterTasksDto): Task[] {
     // check if query parameters exist
-    if (Object.keys(filterDto).length) {
-      return this.tasksService.getFilteredTasks(filterDto);
-    } else return this.tasksService.getAllTasks();
+    return this.tasksService.getFilteredTasks(data);
   }
 
   @Get('/:id')

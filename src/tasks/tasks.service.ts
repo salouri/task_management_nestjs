@@ -46,7 +46,7 @@ export class TasksService {
 
   getFilteredTasks(filterDto: FilterTasksDto): Task[] | undefined {
     let tasks = this.getAllTasks();
-    if (filterDto.status)
+    if (filterDto?.status)
       tasks = tasks.filter((task) => task.status === filterDto.status);
 
     if (filterDto?.search) {
