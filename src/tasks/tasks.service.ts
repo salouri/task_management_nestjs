@@ -48,20 +48,23 @@ export class TasksService {
     return task;
   }
 
-  async getFilteredTasks(filterDto: FilterTasksDto): Promise<Task[]> {
-    let tasks = await this.getAllTasks();
-    if (filterDto?.status)
-      tasks = tasks.filter((task) => task.status === filterDto.status);
+  async getFilteredTasks(filters: FilterTasksDto): Promise<Task[]> {
+    const query = this.taskRepository.createQueryBuilder('task');
 
-    if (filterDto?.search) {
-      const search = filterDto.search.toLowerCase();
-
-      tasks = tasks.filter(
-        (task) =>
-          task.title.toLowerCase().includes(search) ||
-          task.description.toLowerCase().includes(search),
-      );
+    if (filters?.status) {
+      const status = filters.status;
+      query.andWhere('task.status = :status', { status });
     }
+    if (filters?.search) {
+      const search = filters.search.toLowerCase();
+      query.andWhere('LOWER(task.title) LIKE :searchStr', {
+        searchStr: `%${search}%`,
+      });
+      query.orWhere('LOWER(task.description) LIKE :searchStr', {
+        searchStr: `%${search}%`,
+      });
+    }
+    const tasks = query.getMany();
 
     return tasks;
   }
