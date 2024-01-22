@@ -28,21 +28,21 @@ export class TasksService {
   }
 
   async getTaskById(id: string): Promise<Task> {
-    const task = await this.taskRepository.findOne({ where: { id: id } });
+    const task = await this.taskRepository.findOne({ where: { id } });
     if (!task) throw new NotFoundException(`Task with ID ${id} does not exist`);
 
     return task;
   }
 
-  deleteTask(id: string): void {
-    const origCount = this.tasks.length;
-    this.tasks = this.tasks.filter((task) => task.id !== id);
-    if (this.tasks.length == origCount) throw new NotFoundException();
+  async deleteTask(id: string): Promise<void> {
+    const task = await this.getTaskById(id);
+    await this.taskRepository.delete(task.id);
   }
 
   async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
     const task = await this.getTaskById(id);
     task.status = status;
+    await this.taskRepository.update(id, task);
     return task;
   }
 
