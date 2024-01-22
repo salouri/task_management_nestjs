@@ -11,10 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { FilterTasksDto } from './dto/filter-tasks.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { Task } from './task.entity';
 
 @Controller('tasks')
 export class TasksController {
@@ -23,18 +23,18 @@ export class TasksController {
   }
 
   @Get()
-  getTasks(@Query() data: FilterTasksDto): Task[] {
+  getTasks(@Query() data: FilterTasksDto): Promise<Task[] | undefined> {
     // check if query parameters exist
     return this.tasksService.getFilteredTasks(data);
   }
 
   @Get('/:id')
-  getTaskById(@Param('id') id: string): Task {
+  getTaskById(@Param('id') id: string): Promise<Task> {
     return this.tasksService.getTaskById(id);
   }
 
   @Post()
-  createTask(@Body() createTaskDto: CreateTaskDto): Task {
+  createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
     const task = this.tasksService.createTask(createTaskDto);
     return task;
   }
@@ -49,7 +49,7 @@ export class TasksController {
   updateTaskStatus(
     @Param('id') id: string,
     @Body() data: UpdateTaskStatusDto,
-  ): Task {
+  ): Promise<Task> {
     const { status } = data;
     return this.tasksService.updateTaskStatus(id, status);
   }
