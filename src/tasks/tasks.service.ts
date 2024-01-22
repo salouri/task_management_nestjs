@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TaskStatus } from './task-status.enum';
+import { TaskStatus } from './entity/task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { FilterTasksDto } from './dto/filter-tasks.dto';
-import { Task } from './task.entity';
+import { Task } from './entity/task.entity';
 
 @Injectable()
 export class TasksService {
-  private tasks: Task[] = []; // in-memory database! temporary
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
