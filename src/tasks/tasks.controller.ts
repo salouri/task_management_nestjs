@@ -9,6 +9,7 @@ import {
   HttpStatus,
   Patch,
   Query,
+  Version,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -16,7 +17,10 @@ import { FilterTasksDto } from './dto/filter-tasks.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { Task } from './task.entity';
 
-@Controller('tasks')
+@Controller({
+  path: 'tasks',
+  version: '1',
+})
 export class TasksController {
   constructor(private tasksService: TasksService) {
     this.tasksService = tasksService;
@@ -29,6 +33,7 @@ export class TasksController {
   }
 
   @Get('/:id')
+  @Version('2')
   getTaskById(@Param('id') id: string): Promise<Task> {
     return this.tasksService.getTaskById(id);
   }
