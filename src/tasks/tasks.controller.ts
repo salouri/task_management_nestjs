@@ -18,7 +18,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { FilterTasksDto } from './dto/filter-tasks.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { Task } from './entity/task.entity';
-import { GetUser } from 'src/users/get-user.decorator';
+import { GetUser } from 'src/users/decorator/get-user.decorator';
 import { User } from 'src/users/entity/user.entity';
 
 @Controller({
