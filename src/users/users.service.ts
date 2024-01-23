@@ -10,9 +10,15 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepo: Repository<User>,
   ) {}
 
-  async create(data: CreateUserDto): Promise<User> {
-    const user = await this.userRepo.create(data);
-    await this.userRepo.save(user);
-    return user;
+  async create(data: CreateUserDto): Promise<string> {
+    const { email, password } = data;
+    try {
+      const user = await this.userRepo.create({ email, password });
+      await this.userRepo.save(user);
+      return user.id;
+    } catch (error) {
+      console.log('error: ', error.detail);
+      return error.detail;
+    }
   }
 }
