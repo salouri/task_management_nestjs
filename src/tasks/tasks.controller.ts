@@ -45,8 +45,11 @@ export class TasksController {
   }
 
   @Post()
-  createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-    const task = this.tasksService.createTask(createTaskDto);
+  createTask(
+    @Body() data: CreateTaskDto,
+    @GetUser() user: User,
+  ): Promise<Task> {
+    const task = this.tasksService.createTask(data, user);
     return task;
   }
 
