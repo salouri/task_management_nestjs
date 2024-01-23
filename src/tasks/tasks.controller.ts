@@ -18,6 +18,8 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { FilterTasksDto } from './dto/filter-tasks.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { Task } from './entity/task.entity';
+import { GetUser } from 'src/users/get-user.decorator';
+import { User } from 'src/users/entity/user.entity';
 
 @Controller({
   path: 'tasks',
@@ -30,9 +32,10 @@ export class TasksController {
   @Get()
   getTasks(
     @Query() data: FilterTasksDto,
+    @GetUser() user: User,
   ): Promise<Task[]> {
     // check if query parameters exist
-    return this.tasksService.getFilteredTasks(data);
+    return this.tasksService.getFilteredTasks(data, user);
   }
 
   @Get('/:id')
