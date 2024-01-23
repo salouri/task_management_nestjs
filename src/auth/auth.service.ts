@@ -12,7 +12,7 @@ export class AuthService {
     private usersService: UsersService,
   ) {}
 
-  async signUp(data: CreateUserDto): Promise<string> {
+  async signUp(data: CreateUserDto): Promise<{ id: string }> {
     return this.usersService.create(data);
   }
 }

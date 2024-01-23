@@ -11,12 +11,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  createUser(@Body() data: CreateUserDto): Promise<string> {
-    try {
-      return this.authService.signUp(data);
-    } catch (error) {
-      console.log('*Error: ', error);
-      return error;
-    }
+  createUser(@Body() data: CreateUserDto): Promise<{ id: string }> {
+    return this.authService.signUp(data);
   }
 }
