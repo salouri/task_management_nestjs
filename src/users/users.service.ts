@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
@@ -26,4 +27,13 @@ export class UsersService {
       else throw new InternalServerErrorException();
     }
   }
+
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepo.findOne({ where: { email } });
+    if (!user)
+      throw new NotFoundException(`User with email '${email}' does not exist`);
+    return user;
+  }
+
+  
 }
