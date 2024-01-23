@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { TaskStatus } from './task-status.enum';
 import { User } from 'src/users/entity/user.entity';
 
@@ -29,5 +30,6 @@ export class Task {
   updatedAt?: Date;
 
   @ManyToOne((_type) => User, (user) => user.tasks, { eager: false })
+  @Exclude({ toPlainOnly: true }) // exclude "user" property from responses
   user: User;
 }
