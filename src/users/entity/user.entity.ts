@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import * as argon from 'argon2';
+import { Task } from 'src/tasks/entity/task.entity';
 
 @Entity()
 export class User {
@@ -23,6 +25,9 @@ export class User {
 
   @CreateDateColumn()
   updatedAt?: Date;
+
+  @OneToMany((_type) => Task, (task) => task.user, { eager: true })
+  tasks: Task[];
 
   @BeforeInsert()
   async hashPassword() {

@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
+import { User } from 'src/users/entity/user.entity';
 
 @Entity()
 export class Task {
@@ -25,4 +27,7 @@ export class Task {
 
   @CreateDateColumn()
   updatedAt?: Date;
+
+  @ManyToMany((_type) => User, (user) => user.tasks, { eager: false })
+  user: User;
 }
