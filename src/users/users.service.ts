@@ -17,7 +17,7 @@ export class UsersService {
 
   async create(data: CreateUserDto): Promise<{ id: string }> {
     const { email, password } = data;
-    const user = await this.userRepo.create({ email, password });
+    const user = this.userRepo.create({ email, password });
     try {
       await this.userRepo.save(user);
       return { id: user.id };
@@ -34,6 +34,4 @@ export class UsersService {
       throw new NotFoundException(`User with email '${email}' does not exist`);
     return user;
   }
-
-  
 }
