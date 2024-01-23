@@ -30,20 +30,24 @@ export class TasksService {
     return task;
   }
 
-  async getTaskById(id: string): Promise<Task> {
-    const task = await this.taskRepository.findOne({ where: { id } });
+  async getTaskById(id: string, user: User): Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id, user } });
     if (!task) throw new NotFoundException(`Task with ID ${id} does not exist`);
 
     return task;
   }
 
-  async deleteTask(id: string): Promise<void> {
-    const task = await this.getTaskById(id);
+  async deleteTask(id: string, user: User): Promise<void> {
+    const task = await this.getTaskById(id, user);
     await this.taskRepository.delete(task.id);
   }
 
-  async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
-    const task = await this.getTaskById(id);
+  async updateTaskStatus(
+    id: string,
+    status: TaskStatus,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
     task.status = status;
     await this.taskRepository.update(id, task);
     return task;
@@ -51,6 +55,7 @@ export class TasksService {
 
   async getFilteredTasks(filters: FilterTasksDto, user: User): Promise<Task[]> {
     const query = this.taskRepository.createQueryBuilder('task');
+    query.where({ user });
 
     if (filters?.status) {
       const status = filters.status;
@@ -58,13 +63,14 @@ export class TasksService {
     }
     if (filters?.search) {
       const search = filters.search.toLowerCase();
-      query.andWhere('LOWER(task.title) LIKE :searchStr', {
-        searchStr: `%${search}%`,
-      });
-      query.orWhere('LOWER(task.description) LIKE :searchStr', {
-        searchStr: `%${search}%`,
-      });
+      query.andWhere(
+        '(LOWER(task.title) LIKE :searchStr OR LOWER(task.description) LIKE :searchStr)',
+        {
+          searchStr: `%${search}%`,
+        },
+      );
     }
+
     const tasks = query.getMany();
 
     return tasks;
