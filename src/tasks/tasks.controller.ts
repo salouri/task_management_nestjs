@@ -22,9 +22,7 @@ import { Task } from './entity/task.entity';
   version: '1',
 })
 export class TasksController {
-  constructor(private tasksService: TasksService) {
-    this.tasksService = tasksService;
-  }
+  constructor(private tasksService: TasksService) {}
 
   @Get()
   getTasks(@Query() data: FilterTasksDto): Promise<Task[] | undefined> {
