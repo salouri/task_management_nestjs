@@ -1,4 +1,22 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { User } from 'src/users/entity/user.entity';
 
-@Controller('auth')
-export class AuthController {}
+@Controller({
+  path: 'auth',
+  version: '1',
+})
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @Post('signup')
+  createUser(@Body() data: CreateUserDto): Promise<string> {
+    try {
+      return this.authService.signUp(data);
+    } catch (error) {
+      console.log('*Error: ', error);
+      return error;
+    }
+  }
+}
