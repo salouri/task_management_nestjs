@@ -10,7 +10,9 @@ import {
   Patch,
   Query,
   Version,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { FilterTasksDto } from './dto/filter-tasks.dto';
@@ -21,11 +23,14 @@ import { Task } from './entity/task.entity';
   path: 'tasks',
   version: '1',
 })
+@UseGuards(AuthGuard())
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getTasks(@Query() data: FilterTasksDto): Promise<Task[] | undefined> {
+  getTasks(
+    @Query() data: FilterTasksDto,
+  ): Promise<Task[]> {
     // check if query parameters exist
     return this.tasksService.getFilteredTasks(data);
   }
