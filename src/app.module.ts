@@ -14,6 +14,10 @@ import { configValidationSchema } from './config/config.schema';
       cache: true,
       envFilePath: [`${process.env.NODE_ENV}.env`],
       validationSchema: configValidationSchema,
+      validationOptions: {
+        allowUnknown: true, // allow env vars from .env but not mentioned in schema
+        abortEarly: false,  // validate the rest of env vars even if errors found
+      },
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
