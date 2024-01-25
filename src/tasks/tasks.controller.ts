@@ -30,42 +30,48 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getTasks(
+  async getTasks(
     @Query() data: FilterTasksDto,
     @GetUser() user: User,
   ): Promise<Task[]> {
     // check if query parameters exist
-    return this.tasksService.getFilteredTasks(data, user);
+    return await this.tasksService.getFilteredTasks(data, user);
   }
 
   @Get('/:id')
   @Version('2')
-  getTaskById(@Param('id') id: string, @GetUser() user: User): Promise<Task> {
-    return this.tasksService.getTaskById(id, user);
+  async getTaskById(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<Task> {
+    return await this.tasksService.getTaskById(id, user);
   }
 
   @Post()
-  createTask(
+  async createTask(
     @Body() data: CreateTaskDto,
     @GetUser() user: User,
   ): Promise<Task> {
-    const task = this.tasksService.createTask(data, user);
+    const task = await this.tasksService.createTask(data, user);
     return task;
   }
 
   @HttpCode(HttpStatus.ACCEPTED)
   @Delete('/:id')
-  deleteTask(@Param('id') id: string, @GetUser() user: User): void {
-    this.tasksService.deleteTask(id, user);
+  async deleteTask(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<void> {
+    const task = await this.tasksService.deleteTask(id, user);
   }
 
   @Patch('/:id/status')
-  updateTaskStatus(
+  async updateTaskStatus(
     @Param('id') id: string,
     @Body() data: UpdateTaskStatusDto,
     @GetUser() user: User,
   ): Promise<Task> {
     const { status } = data;
-    return this.tasksService.updateTaskStatus(id, status, user);
+    return await this.tasksService.updateTaskStatus(id, status, user);
   }
 }
