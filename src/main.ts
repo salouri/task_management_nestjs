@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import {
+  Logger,
   RequestMethod,
   VERSION_NEUTRAL,
   ValidationPipe,
@@ -10,7 +11,16 @@ import {
 import { TransformInterceptor } from './transform.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    // log levels: error => warn => log => debug => verbose
+    logger:
+      process.env.NODE_ENV === 'production'
+        ? ['log', 'error']
+        : process.env.NODE_ENV === 'test'
+          ? ['log', 'error', 'warn']
+          : ['verbose'], //for development include everything
+  });
+  const logger = new Logger(AppModule.name);
   const config = app.get(ConfigService);
 
   app.useGlobalPipes(new ValidationPipe());
@@ -26,6 +36,8 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  await app.listen(config.get('APP_PORT'));
+  const port = config.get('APP_PORT');
+  await app.listen(port);
+  logger.log(`Application listening on port ${port}`);
 }
 bootstrap();

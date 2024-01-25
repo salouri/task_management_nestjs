@@ -1,10 +1,16 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TasksModule } from './tasks/tasks.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { configValidationSchema } from './config/config.schema';
+import { configValidationSchema } from './common/config/config.schema';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -16,7 +22,7 @@ import { configValidationSchema } from './config/config.schema';
       validationSchema: configValidationSchema,
       validationOptions: {
         allowUnknown: true, // allow env vars from .env but not mentioned in schema
-        abortEarly: false,  // validate the rest of env vars even if errors found
+        abortEarly: false, // validate the rest of env vars even if errors found
       },
     }),
     TypeOrmModule.forRootAsync({
@@ -38,4 +44,11 @@ import { configValidationSchema } from './config/config.schema';
     UsersModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .exclude('(.*)/auth/(.*)')  // auth requests' body may include passwords
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
