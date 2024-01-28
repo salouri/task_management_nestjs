@@ -39,8 +39,8 @@ export class TasksService {
 
   async getTaskById(id: string, user: User): Promise<Task> {
     const task = await this.taskRepository.findOne({ where: { id, user } });
-    if (!task){
-      this.logger.error(`Task with ID ${id} does not exist`)
+    if (!task) {
+      this.logger.error(`Task with ID ${id} does not exist`);
       throw new NotFoundException({
         statusCode: HttpStatus.NOT_FOUND,
         message: `Task with ID ${id} does not exist`,
