@@ -13,6 +13,7 @@ import { configValidationSchema } from './common/config/config.schema';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessJwtGuard } from './auth/guards/at.guard';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { AccessJwtGuard } from './auth/guards/at.guard';
     AuthModule,
     UsersModule,
   ],
+  controllers: [AppController],
   providers: [
     // apply guard globally to all APIs by default (can be set in main.ts file too)
     {
