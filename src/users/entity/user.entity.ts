@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import * as argon from 'argon2';
 import { Task } from 'src/tasks/entity/task.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -17,8 +18,12 @@ export class User {
   @Column({ type: 'varchar', nullable: false, unique: true })
   email: string;
 
+  @Exclude()
   @Column({ type: 'varchar', nullable: false })
   password: string;
+
+  @Column({type: 'varchar', nullable: true})
+  hashedRt: string;
 
   @CreateDateColumn()
   createdAt?: Date;

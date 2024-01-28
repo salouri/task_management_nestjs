@@ -8,7 +8,7 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import { TransformInterceptor } from './transform.interceptor';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -25,6 +25,10 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
+  // // make all APIs guarded unless assigned "isPublic: true" metadata
+  // const reflector = new Reflector();  // reflector to read metadata
+  // app.useGlobalGuards(new AccessJwtGuard(reflector));
+
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: VERSION_NEUTRAL,
@@ -34,6 +38,7 @@ async function bootstrap() {
     exclude: [{ path: 'health', method: RequestMethod.GET }],
   });
 
+  //working with Exclude decorator
   app.useGlobalInterceptors(new TransformInterceptor());
 
   const port = config.get('APP_PORT');
