@@ -9,6 +9,7 @@ import {
   VersioningType,
 } from '@nestjs/common';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { ClusterService } from './common/cluster.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -41,8 +42,12 @@ async function bootstrap() {
   //working with Exclude decorator
   app.useGlobalInterceptors(new TransformInterceptor());
 
+  // app.get('/health', () => return );
   const port = config.get('APP_PORT');
   await app.listen(port);
   logger.log(`Application listening on port ${port}`);
 }
-bootstrap();
+// do not clusterize in development
+process.env.NODE_ENV === 'development'
+  ? bootstrap()
+  : ClusterService.clusterize(bootstrap);
