@@ -10,6 +10,8 @@ export const configValidationSchema = Joi.object({
   DB_HOST: Joi.string().required(),
   DB_NAME: Joi.string().required(),
   DB_PORT: Joi.number().default(5432).required(),
-  JWT_EXPIRES_IN: Joi.string().required(),
-  JWT_SECRET: Joi.string().required(),
+  ACCESS_JWT_EXPIRES_IN: Joi.string().required(),
+  ACCESS_JWT_SECRET: Joi.string().required(),
+  REFRESH_JWT_EXPIRES_IN: Joi.string().required(),
+  REFRESH_JWT_SECRET: Joi.string().required(),
 });
