@@ -5,15 +5,35 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/app.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    },
+    {
       "type": "node",
       "request": "attach",
-      "name": "Debug Nestjs",
+      "name": "Debug Current Nestjs",
       "autoAttachChildProcesses": true,
       "restart": true,
       "sourceMaps": true,
 
       "skipFiles": ["<node_internals>/**"],
       "outFiles": ["${workspaceFolder}/**/*.js"]
+    },
+
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug New Nestjs",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:debug", "--", "--inspect-brk"],
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "console": "integratedTerminal"
     }
   ]
 }
