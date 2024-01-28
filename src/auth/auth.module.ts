@@ -6,7 +6,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { User } from 'src/users/entity/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { JwtStrategy } from './strategy/jwt.strategy';
+import { AccessJwtStrategy } from './strategy/access-jwt.strategy';
+import { RefreshJwtStrategy } from './strategy/refresh-jwt.strategy';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  providers: [AuthService, UsersService, AccessJwtStrategy, RefreshJwtStrategy],
+  exports: [AccessJwtStrategy, PassportModule],
 })
 export class AuthModule {}
