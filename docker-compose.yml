@@ -1,8 +1,8 @@
 version: '3.9'
 
 services:
-  tasks-postgres:
-    container_name: tasks-postgres_container
+  tasks-dev-postgres:
+    container_name: tasks-dev-postgres_container
     image: postgres:14-alpine
     ports:
       - 5432:5432
@@ -11,7 +11,20 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=pass1234
-      - POSTGRES_DB=tasks_db
+      - POSTGRES_DB=tasks_dev_db
+
+  tasks-test-postgres:
+    container_name: tasks-test-postgres_container
+    image: postgres:14-alpine
+    ports:
+      - 5433:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql@14/data:rw
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass1234
+      - POSTGRES_DB=tasks_test_db
+
   pgadmin:
     container_name: pgadmin4_container
     image: 'dpage/pgadmin4'
