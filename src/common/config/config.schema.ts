@@ -14,4 +14,10 @@ export const configValidationSchema = Joi.object({
   ACCESS_JWT_SECRET: Joi.string().required(),
   REFRESH_JWT_EXPIRES_IN: Joi.string().required(),
   REFRESH_JWT_SECRET: Joi.string().required(),
+
+  DB_USER_TEST: Joi.string(),
+  DB_PASSWORD_TEST: Joi.string(),
+  DB_HOST_TEST: Joi.string(),
+  DB_NAME_TEST: Joi.string(),
+  DB_PORT_TEST: Joi.number().default(5432),
 });
