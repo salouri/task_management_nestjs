@@ -1,4 +1,5 @@
 import {
+  HttpException,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -11,10 +12,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { configValidationSchema } from './common/config/config.schema';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AccessJwtGuard } from './auth/guards/at.guard';
 import { AppController } from './app.controller';
 import { HttpLoggerInterceptor } from './common/interceptors/http-logger.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -58,6 +60,10 @@ import { HttpLoggerInterceptor } from './common/interceptors/http-logger.interce
       provide: APP_INTERCEPTOR,
       scope: Scope.REQUEST,
       useClass: HttpLoggerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })
