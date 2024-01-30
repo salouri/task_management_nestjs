@@ -20,6 +20,7 @@ import { Task } from './entity/task.entity';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { User } from 'src/users/entity/user.entity';
 import { HttpLoggerInterceptor } from 'src/common/interceptors/http-logger.interceptor';
+import { FreezeBodyPipe } from 'src/common/pipes/freeze-body.pipe';
 
 @Controller({
   path: 'tasks',
@@ -52,7 +53,7 @@ export class TasksController {
 
   @Post()
   async createTask(
-    @Body() data: CreateTaskDto,
+    @Body(new FreezeBodyPipe()) data: CreateTaskDto,
     @GetUser() user: User,
   ): Promise<Task> {
     const task = await this.tasksService.createTask(data, user);
