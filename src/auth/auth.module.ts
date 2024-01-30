@@ -13,7 +13,7 @@ import { RefreshJwtStrategy } from './strategy/refresh-jwt.strategy';
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({}),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule.register({ defaultStrategy: 'jwt' }), // import Passport middleware
   ],
   controllers: [AuthController],
   providers: [AuthService, UsersService, AccessJwtStrategy, RefreshJwtStrategy],

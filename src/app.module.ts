@@ -3,6 +3,7 @@ import {
   Module,
   NestModule,
   RequestMethod,
+  Scope,
 } from '@nestjs/common';
 import { TasksModule } from './tasks/tasks.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -10,10 +11,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { configValidationSchema } from './common/config/config.schema';
-import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AccessJwtGuard } from './auth/guards/at.guard';
 import { AppController } from './app.controller';
+import { HttpLoggerInterceptor } from './common/interceptors/http-logger.interceptor';
 
 @Module({
   imports: [
@@ -53,13 +54,18 @@ import { AppController } from './app.controller';
       provide: APP_GUARD,
       useClass: AccessJwtGuard,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      scope: Scope.REQUEST,
+      useClass: HttpLoggerInterceptor,
+    },
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .exclude('(.*)/auth/(.*)')  // auth requests' body may include passwords
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
-  }
+export class AppModule {
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer
+  //     .apply(LoggerMiddleware)
+  //     .exclude('(.*)/auth/(.*)') // auth requests' body may include passwords
+  //     .forRoutes({ path: '*', method: RequestMethod.ALL });
+  // }
 }

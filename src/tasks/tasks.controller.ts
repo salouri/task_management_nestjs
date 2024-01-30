@@ -10,6 +10,7 @@ import {
   Patch,
   Query,
   Version,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -18,6 +19,7 @@ import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { Task } from './entity/task.entity';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { User } from 'src/users/entity/user.entity';
+import { HttpLoggerInterceptor } from 'src/common/interceptors/http-logger.interceptor';
 
 @Controller({
   path: 'tasks',
@@ -27,6 +29,7 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
+  @UseInterceptors(HttpLoggerInterceptor)
   async getTasks(
     @Query() data: FilterTasksDto,
     @GetUser() user: User,
@@ -37,6 +40,7 @@ export class TasksController {
 
   @Get('/:id')
   @Version('1')
+  @UseInterceptors(HttpLoggerInterceptor)
   // @PublicApi()
   // @UseGuards(RefreshJwtGuard)
   async getTaskById(
